@@ -20,16 +20,12 @@
 
 `systemctl enable httpd`
 
-`systemctl start httpd`
-
-``` 
+`systemctl start httpd` 
 
 - Script - Deixar script executável
-'''
-chmod o+x script.sh 
 
-'''
-- Agendar tarefa no /etc/crontab para executar a cada 5 minutos.
-'''
-*/5 * * * * root /script/script.sh
-'''
+`chmod o+x script.sh `
+
+- Agendar tarefa no /etc/crontab para executar a cada 5 minutos
+
+`*/5 * * * * root /script/script.sh`
