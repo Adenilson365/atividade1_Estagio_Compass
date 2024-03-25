@@ -12,7 +12,7 @@
 
 - Execute os comandos:
   
-`sudo su -`
+```sudo su -```
 
 `yum update -y`
 
