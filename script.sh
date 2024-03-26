@@ -13,22 +13,28 @@
 
 
 #Variáveis 
+
+#Armazena o caminho para o diretório de destino dos logs
 DIR_LOGS="/script"
-STATUS=$(systemctl status httpd | grep Active | awk '{print $2}')
-AGO=$(systemctl status httpd | grep Active | cut -d';' -f 2 | systemctl status httpd | grep Active | cut -d';' -f2 | tr -d 'ago')
+#Verifica se apartir do systemctl se o Apache está online ou offline
+STATUS_ON_OFF=$(systemctl status httpd | grep Active | awk '{print $2}')
+#Verifica a quanto tempo está no status atual (Online ou Offline)
+STATUS_UPTIME=$(systemctl status httpd | grep Active | cut -d';' -f 2 | systemctl status httpd | grep Active | cut -d';' -f2 | tr -d 'ago')
+#Retorna a Linha de status do systemctl
 STATUS_ACCES=$(systemctl status httpd | grep 'Status' | awk -F '"' '{print $2}')
 DATE=$(date +"%d/%m/%y %H:%M:%S")
-SERVICE=$(systemctl status httpd | head -n1 | cut -d"-" -f2 | awk '{$1=$1}1')
-LOG_LINE="$DATE - $STATUS_ACCES - $SERVICE"
+NAME_SERVICE=$(systemctl status httpd | head -n1 | cut -d"-" -f2 | awk '{$1=$1}1')
+#Concatena as variáveis para montar a linha de log 
+LOG_LINE="$DATE - $STATUS_ACCES - $NAME_SERVICE"
 
 # Condicional que verifica  com comando test o status do servidor
 # e redireciona para o arquivo de log correspondente.
 
-if [ "$STATUS" = "inactive" ]
+if [ "$STATUS_ON_OFF" = "inactive" ]
 then
-        echo "$LOG_LINE - Servidor Offline a: $AGO" >> $DIR_LOGS/offline.txt
+        echo "$LOG_LINE - Servidor Offline a: $STATUS_UPTIME" >> $DIR_LOGS/offline.txt
 else
-        echo "$LOG_LINE - Servidor Online a: $AGO" >> $DIR_LOGS/online.txt
+        echo "$LOG_LINE - Servidor Online a: $STATUS_UPTIME" >> $DIR_LOGS/online.txt
 fi
 
 
