@@ -1,51 +1,61 @@
 # DOCUMENTAÇÃO DO PROCESSO  DE DESENVOLVIMENTO DA ATIVIDADE 1 - ESTÁGIO COMPASS
 
-## Parte 1 : AWS
-
-### Criar instância EC2
-
-- Security Group com liberação para acesso público 22/TCP, 111/TCP e UDP, 2049/TCP/UDP, 80/TCP, 443/TCP
-![Imagem mostrando regras do securrity group anexado a ec2](./assets/criacao_sg.png)
-
-- Criação ec2 Requisitos: Amazon Linux 2 , família t3.small,  EBS 16GB, Security Group SG-atividade1
-![Imagem mostrando o resumo de criação da EC2 onde é possível verificar os requisitos da atividade](./assets/EC2_resumo_criacao.png)
-
-
 ## Parte 2 : Linux
 
 ### Instalar pacotes
 
 - Execute os comandos:
-  
-```sudo su -```
 
-`yum update -y`
+- Entrar em modo root para executar as configurações:
+```
+sudo su -
+```
+- Atualizar o sistema
+```
+yum update -y
+```
+- Instalar o servidor Apache
+```
+yum install httpd -y
+```
+- Habilitar o apache para subir na inicialização
+```
+systemctl enable httpd
+```
+- Iniciar o apache
+```
+systemctl start httpd
+``` 
+- Verificar status do apache
+```
+systemctl status httpd
+```
 
-`yum install httpd -y`
-
-`systemctl enable httpd`
-
-`systemctl start httpd` 
-
-`systemctl status httpd`
-
-### Montar NFS usando serviço EFS
+### Montar NFS usando EFS
 
 - Pacote sugerido para instalação pela documentação AWS
 
-`amazon-efs-utils`
+```
+amazon-efs-utils
+```
 
-- Diretório cliente 
+- Criar diretório de montagem na EC2 cliente 
 
-`mkdir /mnt/nfs `
+```
+mkdir /mnt/nfs
+```
 
 - Comando para montar o EFS como NFS
 
-`mount -t nfs4 -o nfsvers=4.1,rsize=1048576,wsize=1048576,hard,timeo=600,retrans=2,noresvport <ip_efs>:/ /mnt/nfs`
+```
+mount -t nfs4 -o nfsvers=4.1,rsize=1048576,wsize=1048576,hard,timeo=600,retrans=2,noresvport <ip_efs>:/ /mnt/nfs
+```
 
 - Verificar se o diretório está montado
 
-` df -h -t nfs4 ` 
+```
+df -h -t nfs4
+``` 
 
  - Saída esperada do comando
 
@@ -53,18 +63,30 @@
 
 - Editar arquivo /etc/fstab - Para montar o disco automáticamente ao inicilizar o servidor
 
-`ip_nfs:/ /mnt/nfs nfs4 defaults,_netdev,noresvport   0 0`
+```
+ip_efs:/ /mnt/nfs nfs4 nofail,_netdev,rsize=1048576,wsize=1048576,hard,timeo=600,retrans=2,noresvport   0 0
+``` 
+- Criar diretório dos arquivos de log
+```
+mkdir /mnt/nfs/adenilson
+```
 
 ### Script
 
 - Criar Diretório do Script.
 
-`mkdir script`
+```
+mkdir /script
+```
+- Crar o arquivo do script dentro do diretório.
+- Dixar script executável para o dono do arquivo, nesse caso será executado como root.
 
-- Script - Deixar script executável para o dono do arquivo.
-
-`chmod u+x script.sh `
+```
+chmod u+x script.sh
+```
 
 - Agendar tarefa no /etc/crontab para executar a cada 5 minutos
-
-`*/5 * * * * root /script/script.sh`
+ 
+```
+*/5 * * * * root /script/script.sh
+```
