@@ -65,7 +65,15 @@ df -h -t nfs4
 
 ```
 ip_efs:/ /mnt/nfs nfs4 nofail,_netdev,rsize=1048576,wsize=1048576,hard,timeo=600,retrans=2,noresvport   0 0
-``` 
+```
+- Opções - Recomendadas pela documentação:
+  - nofail : Se falhar a montagem não atrapalha a inicialização
+  - _netdev : Indica que é uma unidade na rede e deve esperar subir a rede para montar
+  - rsize e wsize : Indica o tamanho do blocos de leitura e escrita
+  - hard : se não conseguir montar o NFS, deve tentar novamente segundo as opções timeo e retrans
+  - timeo : tempo até uma nova tentativa
+  - retrans : número de tentativas
+  - noresvport : Facilita a reconexão após uma desconexão
 - Criar diretório dos arquivos de log
 ```
 mkdir /mnt/nfs/adenilson
