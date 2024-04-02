@@ -98,3 +98,9 @@ chmod u+x script.sh
 ```
 */5 * * * * root /script/script.sh
 ```
+- Script foi montado sobre da saída do comando systemctl status httpd
+- Linha de log esperada do script (no caso, quando onlne):
+  
+`
+26/03/24 15:05:01 - The Apache HTTP Server - Total requests: 3; Idle/Busy workers 100/0;Requests/sec: 0.000704; Bytes served/sec:   2 B/sec - Servidor Online a:  1h 11min 
+`
